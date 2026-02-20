@@ -25,3 +25,13 @@ env/
 # OS files
 .DS_Store
 Thumbs.db
+
+# Docker
+docker-compose.override.yml
+*.env.local
+*.env.dev
+*.env.prod
+.dockerignore
+
+# Docker cache / temp
+**/__pycache__/
