@@ -9,7 +9,8 @@ from app.routes import student
 from app.routes import institution
 from app.routes import department
 from app.routes import user
-
+from app.routes import faculty
+from app.routes import grade
 app = FastAPI(title="ERPify API")
 
 app.include_router(course.router)
@@ -19,6 +20,8 @@ app.include_router(student.router)
 app.include_router(institution.router)
 app.include_router(department.router)
 app.include_router(user.router)
+app.include_router(faculty.router)
+app.include_router(grade.router)
 
 @app.get("/db-test")
 def test_db():

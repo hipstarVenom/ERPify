@@ -22,5 +22,7 @@ Replace YOUR_DATABASE_URL with your Supabase PostgreSQL connection string.
 Install dependencies:
 
 pip install -r requirements.txt
+
+
 ▶️ Run the Backend
 uvicorn app.main:app --reload
