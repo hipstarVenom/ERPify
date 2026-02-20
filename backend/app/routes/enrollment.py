@@ -4,7 +4,7 @@ from app.database import SessionLocal
 from app.models.enrollment import Enrollment
 from app.schemas.enrollment import EnrollmentCreate, EnrollmentResponse
 
-router = APIRouter(prefix="/enrollments", tags=["Enrollments"])
+router = APIRouter(prefix="/enrollment", tags=["Enrollment"])
 
 def get_db():
     db = SessionLocal()

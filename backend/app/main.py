@@ -13,6 +13,9 @@ from app.routes import faculty
 from app.routes import grade
 from app.routes import enrollment
 
+from fastapi.middleware.cors import CORSMiddleware
+
+
 app = FastAPI(title="ERPify API")
 
 app.include_router(course.router)
@@ -25,3 +28,11 @@ app.include_router(user.router)
 app.include_router(faculty.router)
 app.include_router(grade.router)
 app.include_router(enrollment.router)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+    allow_credentials=True,
+)
