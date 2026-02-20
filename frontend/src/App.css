@@ -27,3 +27,56 @@
 .role-btn:hover {
   transform: translateY(-4px);
 }
+
+.admin-container {
+  display: flex;
+  height: 100vh;
+}
+
+.sidebar {
+  width: 240px;
+  background-color: #0f172a;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar h2 {
+  margin-bottom: 30px;
+}
+
+/* 👇 Make nav vertical */
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+/* Style links */
+.sidebar nav a {
+  color: white;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 6px;
+  transition: 0.3s;
+}
+
+.sidebar nav a:hover {
+  background-color: #1e293b;
+}
+
+/* Logout button pinned to bottom */
+.logout-btn {
+  margin-top: auto;
+  padding: 10px;
+  background-color: #ef4444;
+  border: none;
+  cursor: pointer;
+  border-radius: 6px;
+}
+
+.admin-content {
+  flex: 1;
+  padding: 40px;
+  background-color: #1f2937;
+}
