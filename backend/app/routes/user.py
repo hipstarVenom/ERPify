@@ -6,6 +6,7 @@ from typing import List
 from app.database import SessionLocal
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
+from fastapi import Body
 
 
 router = APIRouter(
@@ -51,5 +52,24 @@ def get_user(user_id: str, db: Session = Depends(get_db)):
 
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+
+    return user
+
+# 🔹 POST - Login User
+@router.post("/login", response_model=UserResponse)
+def login_user(
+    first_name: str = Body(...),
+    last_name: str = Body(...),
+    role: str = Body(...),
+    db: Session = Depends(get_db)
+):
+    user = db.query(User).filter(
+        User.first_name == first_name,
+        User.last_name == last_name,
+        User.role == role
+    ).first()
+
+    if not user:
+        raise HTTPException(status_code=404, detail="Invalid credentials")
 
     return user
