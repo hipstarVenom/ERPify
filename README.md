@@ -24,7 +24,4 @@ Install dependencies:
 pip install -r requirements.txt
 ▶️ Run the Backend
 uvicorn app.main:app --reload
-
-This is clean, readable, and professional for GitHub.  
-
-If you want, I can also add a small "Project Structure" section to make it look more mature.
+---
