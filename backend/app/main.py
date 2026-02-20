@@ -11,6 +11,8 @@ from app.routes import department
 from app.routes import user
 from app.routes import faculty
 from app.routes import grade
+from app.routes import enrollment
+
 app = FastAPI(title="ERPify API")
 
 app.include_router(course.router)
@@ -22,12 +24,4 @@ app.include_router(department.router)
 app.include_router(user.router)
 app.include_router(faculty.router)
 app.include_router(grade.router)
-
-@app.get("/db-test")
-def test_db():
-    try:
-        with engine.connect() as connection:
-            result = connection.execute(text("SELECT 1"))
-            return {"status": "connected", "result": result.scalar()}
-    except Exception as e:
-        return {"status": "error", "message": str(e)}
+app.include_router(enrollment.router)
