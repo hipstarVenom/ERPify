@@ -15,17 +15,17 @@ class Grade(Base):
         server_default=text("gen_random_uuid()")
     )
 
+    institution_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("institution.id", ondelete="CASCADE"),
+        nullable=False
+    )
+
     enrollment_id = Column(
         UUID(as_uuid=True),
-        ForeignKey("student.user_id"), # Assuming enrollment_id links to student's user_id or a separate enrollment table if it exists
+        ForeignKey("enrollment.id", ondelete="CASCADE"),
         nullable=False
     )
 
     marks = Column(Integer, nullable=False)
     grade = Column(String(5), nullable=False)
-    
-    updated_time = Column(
-        DateTime,
-        server_default=text("CURRENT_TIMESTAMP"),
-        onupdate=text("CURRENT_TIMESTAMP")
-    )

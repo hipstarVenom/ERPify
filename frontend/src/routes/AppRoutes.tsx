@@ -10,9 +10,11 @@ import Faculty from "../pages/admin/Faculty";
 import Courses from "../pages/admin/Courses";
 import Departments from "../pages/admin/Departments";
 import Enrollments from "../pages/admin/Enrollments";
+import AtRiskStudents from "../pages/admin/AtRiskStudents";
 import FacultyDashboard from "../pages/faculty/FacultyDashboard";
 import FacultyAttendance from "../pages/faculty/FacultyAttendance";
 import AttendanceHistory from "../pages/faculty/AttendanceHistory";
+import FacultyGrades from "../pages/faculty/FacultyGrades";
 
 export default function AppRoutes() {
   return (
@@ -23,6 +25,7 @@ export default function AppRoutes() {
       <Route path="/faculty" element={<FacultyLayout />}>
         <Route index element={<FacultyDashboard />} />
         <Route path="attendance" element={<FacultyAttendance />} />
+        <Route path="grades" element={<FacultyGrades />} />
         <Route path="history" element={<AttendanceHistory />} />
       </Route>
 
@@ -35,6 +38,7 @@ export default function AppRoutes() {
         <Route path="courses" element={<Courses />} />
         <Route path="students" element={<Students />} />
         <Route path="enrollments" element={<Enrollments />} />
+        <Route path="risk" element={<AtRiskStudents />} />
       </Route>
     </Routes>
   );
