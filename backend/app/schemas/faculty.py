@@ -8,6 +8,7 @@ from uuid import UUID
 class FacultyCreate(BaseModel):
     user_id: UUID
     department_id: UUID
+    course_id: UUID
     designation: str
 
 
@@ -15,6 +16,7 @@ class FacultyCreate(BaseModel):
 class FacultyResponse(BaseModel):
     user_id: UUID
     department_id: UUID
+    course_id: UUID
     designation: str
 
     model_config = {

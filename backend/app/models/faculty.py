@@ -20,4 +20,10 @@ class Faculty(Base):
         nullable=False
     )
 
+    course_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("course.id"),
+        nullable=False
+    )
+
     designation = Column(String, nullable=False)
