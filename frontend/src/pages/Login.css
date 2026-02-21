@@ -140,7 +140,7 @@
 }
 
 .login-field label {
-  font-size: 0.75rem;
+  font-size: 0.75rem;22
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -148,7 +148,7 @@
 }
 
 .login-field input {
-  background: var(--bg-input);
+  background: var(--bg-input);22
   border: 1px solid var(--border-input);
   border-radius: var(--radius-sm);
   padding: 10px 13px;

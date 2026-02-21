@@ -35,6 +35,10 @@ export default function FacultyLayout() {
             <span className="sidebar-link-icon">📜</span>
             Attendance History
           </NavLink>
+          <NavLink to="/faculty/grades" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
+            <span className="sidebar-link-icon">🎓</span>
+            Grade Evaluation
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">

@@ -8,6 +8,7 @@ from typing import Optional
 
 # 🔹 Used when creating grade (POST)
 class GradeCreate(BaseModel):
+    institution_id: UUID
     enrollment_id: UUID
     marks: int
     grade: str
@@ -16,10 +17,10 @@ class GradeCreate(BaseModel):
 # 🔹 Used when returning grade (GET)
 class GradeResponse(BaseModel):
     id: UUID
+    institution_id: UUID
     enrollment_id: UUID
     marks: int
     grade: str
-    updated_time: datetime
 
     model_config = {
         "from_attributes": True
