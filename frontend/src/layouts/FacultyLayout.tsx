@@ -31,10 +31,6 @@ export default function FacultyLayout() {
             <span className="sidebar-link-icon">📝</span>
             Mark Attendance
           </NavLink>
-          <NavLink to="/faculty/grades" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
-            <span className="sidebar-link-icon">🎓</span>
-            Student Grades
-          </NavLink>
           <NavLink to="/faculty/history" className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
             <span className="sidebar-link-icon">📜</span>
             Attendance History
