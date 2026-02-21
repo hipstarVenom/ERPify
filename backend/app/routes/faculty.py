@@ -63,3 +63,16 @@ def get_faculty(user_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Faculty not found")
 
     return faculty
+
+
+# 🔹 DELETE - Delete Faculty By user_id
+@router.delete("/{user_id}")
+def delete_faculty(user_id: str, db: Session = Depends(get_db)):
+    faculty = db.query(Faculty).filter(Faculty.user_id == user_id).first()
+
+    if not faculty:
+        raise HTTPException(status_code=404, detail="Faculty not found")
+
+    db.delete(faculty)
+    db.commit()
+    return {"message": "Faculty deleted successfully"}

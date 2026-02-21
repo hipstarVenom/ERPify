@@ -63,3 +63,16 @@ def get_student(user_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Student not found")
 
     return student
+
+
+# 🔹 DELETE - Delete Student By user_id
+@router.delete("/{user_id}")
+def delete_student(user_id: str, db: Session = Depends(get_db)):
+    student = db.query(Student).filter(Student.user_id == user_id).first()
+
+    if not student:
+        raise HTTPException(status_code=404, detail="Student not found")
+
+    db.delete(student)
+    db.commit()
+    return {"message": "Student deleted successfully"}

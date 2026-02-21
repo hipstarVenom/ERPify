@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
+import ConfirmModal from "../../components/ConfirmModal";
 
 interface Institution { id: string; name: string; }
 
 export default function Institutions() {
   const [institutions, setInstitutions] = useState<Institution[]>([]);
   const [name, setName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [msg, setMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<Institution | null>(null);
 
   const fetchInstitutions = async () => {
     const res = await API.get("/institutions");
@@ -17,6 +20,7 @@ export default function Institutions() {
 
   const handleCreate = async () => {
     if (!name.trim()) return;
+    setLoading(true);
     try {
       await API.post("/institutions", { name: name.trim() });
       setName("");
@@ -25,12 +29,37 @@ export default function Institutions() {
       setTimeout(() => setMsg(null), 3000);
     } catch {
       setMsg({ type: "error", text: "Failed to create institution." });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!deleteTarget) return;
+    try {
+      await API.delete(`/institutions/${deleteTarget.id}`);
+      setMsg({ type: "success", text: `"${deleteTarget.name}" deleted.` });
+      fetchInstitutions();
+      setTimeout(() => setMsg(null), 3000);
+    } catch {
+      setMsg({ type: "error", text: "Failed to delete institution." });
+    } finally {
+      setDeleteTarget(null);
     }
   };
 
   return (
     <>
-      {/* Create form */}
+      {deleteTarget && (
+        <ConfirmModal
+          title="Delete Institution?"
+          message={`Are you sure you want to delete "${deleteTarget.name}"? This action cannot be undone.`}
+          onConfirm={handleDelete}
+          onCancel={() => setDeleteTarget(null)}
+        />
+      )}
+
+      {/* Add Form */}
       <div className="erp-card">
         <div className="card-header">
           <span className="card-title"><span className="card-title-icon">🏛️</span> Add Institution</span>
@@ -55,8 +84,8 @@ export default function Institutions() {
             </div>
           </div>
           <div>
-            <button className="erp-btn erp-btn-primary" onClick={handleCreate}>
-              + Create Institution
+            <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
+              {loading ? "Creating…" : "+ Create Institution"}
             </button>
           </div>
         </div>
@@ -80,15 +109,22 @@ export default function Institutions() {
                 <tr>
                   <th>#</th>
                   <th>Name</th>
-                  <th>ID</th>
+                  <th style={{ width: 80, textAlign: "center" }}>Action</th>
                 </tr>
               </thead>
               <tbody>
                 {institutions.map((inst, i) => (
                   <tr key={inst.id}>
-                    <td>{i + 1}</td>
+                    <td style={{ color: "var(--text-muted)" }}>{i + 1}</td>
                     <td><strong>{inst.name}</strong></td>
-                    <td style={{ color: "var(--text-muted)", fontFamily: "monospace", fontSize: "0.8rem" }}>{inst.id}</td>
+                    <td style={{ textAlign: "center" }}>
+                      <button
+                        className="erp-btn erp-btn-danger"
+                        onClick={() => setDeleteTarget(inst)}
+                      >
+                        🗑️ Delete
+                      </button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

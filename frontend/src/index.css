@@ -515,6 +515,19 @@ body {
   color: #ffffff;
 }
 
+.erp-btn-danger {
+  background: var(--danger-bg);
+  color: var(--danger);
+  border: 1px solid var(--danger);
+  padding: 5px 12px;
+  font-size: 0.8rem;
+}
+
+.erp-btn-danger:hover {
+  background: var(--danger);
+  color: #ffffff;
+}
+
 /* ═══════════════════════════════════════════════════════════
    TABLES
 ═══════════════════════════════════════════════════════════ */

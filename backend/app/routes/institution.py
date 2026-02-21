@@ -53,3 +53,18 @@ def get_institution(institution_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Institution not found")
 
     return institution
+
+
+# 🔹 DELETE - Delete Institution By ID
+@router.delete("/{institution_id}")
+def delete_institution(institution_id: str, db: Session = Depends(get_db)):
+    institution = db.query(Institution).filter(
+        Institution.id == institution_id
+    ).first()
+
+    if not institution:
+        raise HTTPException(status_code=404, detail="Institution not found")
+
+    db.delete(institution)
+    db.commit()
+    return {"message": "Institution deleted successfully"}

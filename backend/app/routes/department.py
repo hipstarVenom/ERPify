@@ -53,3 +53,18 @@ def get_department(department_id: str, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Department not found")
 
     return department
+
+
+# 🔹 DELETE - Delete Department By ID
+@router.delete("/{department_id}")
+def delete_department(department_id: str, db: Session = Depends(get_db)):
+    department = db.query(Department).filter(
+        Department.id == department_id
+    ).first()
+
+    if not department:
+        raise HTTPException(status_code=404, detail="Department not found")
+
+    db.delete(department)
+    db.commit()
+    return {"message": "Department deleted successfully"}
