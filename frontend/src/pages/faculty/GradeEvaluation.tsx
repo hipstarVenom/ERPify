@@ -1,6 +1,11 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
+import {
+    GraduationCap,
+    CheckCircle2,
+    AlertCircle
+} from "lucide-react";
 
 interface Enrollment {
     id: string;
@@ -138,7 +143,7 @@ export default function GradeEvaluation() {
             }));
 
             await API.post("/grades/bulk", payload);
-            setMsg({ type: "success", text: "✅ Grades submitted successfully." });
+            setMsg({ type: "success", text: "Grades submitted successfully." });
         } catch (err) {
             setMsg({ type: "error", text: "Failed to submit grades. Please try again." });
         } finally {
@@ -166,7 +171,7 @@ export default function GradeEvaluation() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📊</span> Student Grade Evaluation
+                        <span className="card-title-icon"><GraduationCap /></span> Student Grade Evaluation
                     </span>
                 </div>
 
@@ -296,6 +301,7 @@ export default function GradeEvaluation() {
                     <div className="card-footer" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 15 }}>
                         {msg && (
                             <div className={`erp-alert erp-alert-${msg.type}`}>
+                                {msg.type === "success" ? <CheckCircle2 /> : <AlertCircle />}
                                 {msg.text}
                             </div>
                         )}
@@ -313,7 +319,7 @@ export default function GradeEvaluation() {
 
             {!selectedCourseId && (
                 <div className="erp-empty" style={{ marginTop: 20 }}>
-                    <div className="erp-empty-icon">🎓</div>
+                    <div className="erp-empty-icon"><GraduationCap /></div>
                     <div className="erp-empty-text">Select a course to evaluate grades</div>
                 </div>
             )}

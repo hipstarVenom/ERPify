@@ -1,16 +1,31 @@
 import { Link, Outlet, useNavigate, useLocation } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
+import {
+  LayoutDashboard,
+  Building2,
+  FolderTree,
+  GraduationCap,
+  BookOpen,
+  Users,
+  ClipboardList,
+  Bot,
+  Moon,
+  Sun,
+  LogOut,
+  Zap,
+  ShieldCheck
+} from "lucide-react";
 
 const NAV_ITEMS = [
-  { to: "/admin", label: "Dashboard", icon: "📊" },
-  { to: "/admin/institutions", label: "Institutions", icon: "🏛️" },
-  { to: "/admin/departments", label: "Departments", icon: "🗂️" },
-  { to: "/admin/faculty", label: "Faculty", icon: "🎓" },
-  { to: "/admin/courses", label: "Courses", icon: "📚" },
-  { to: "/admin/students", label: "Students", icon: "👥" },
-  { to: "/admin/enrollments", label: "Enrollments", icon: "📋" },
-  { to: "/admin/risk", label: "Risk Automation", icon: "🤖" },
+  { to: "/admin", label: "Dashboard", Icon: LayoutDashboard },
+  { to: "/admin/institutions", label: "Institutions", Icon: Building2 },
+  { to: "/admin/departments", label: "Departments", Icon: FolderTree },
+  { to: "/admin/faculty", label: "Faculty", Icon: GraduationCap },
+  { to: "/admin/courses", label: "Courses", Icon: BookOpen },
+  { to: "/admin/students", label: "Students", Icon: Users },
+  { to: "/admin/enrollments", label: "Enrollments", Icon: ClipboardList },
+  { to: "/admin/risk", label: "Risk Automation", Icon: Bot },
 ];
 
 export default function AdminLayout() {
@@ -38,7 +53,7 @@ export default function AdminLayout() {
       <aside className="erp-sidebar">
         {/* Brand */}
         <div className="sidebar-brand">
-          <span className="sidebar-brand-icon">⚡</span>
+          <span className="sidebar-brand-icon"><Zap fill="currentColor" /></span>
           <span className="sidebar-brand-name">ERPify</span>
         </div>
 
@@ -51,7 +66,9 @@ export default function AdminLayout() {
               to={item.to}
               className={`sidebar-link ${isActive(item.to) ? "active" : ""}`}
             >
-              <span className="sidebar-link-icon">{item.icon}</span>
+              <span className="sidebar-link-icon">
+                <item.Icon size={18} />
+              </span>
               {item.label}
             </Link>
           ))}
@@ -67,7 +84,7 @@ export default function AdminLayout() {
             title="Toggle theme"
           >
             <span className="sidebar-link-icon">
-              {theme === "light" ? "🌙" : "☀️"}
+              {theme === "light" ? <Moon /> : <Sun />}
             </span>
             {theme === "light" ? "Dark Mode" : "Light Mode"}
             <span className={`theme-toggle-track ${theme === "dark" ? "on" : ""}`}>
@@ -77,7 +94,7 @@ export default function AdminLayout() {
 
           {/* Logout */}
           <button id="logoutBtn" className="erp-logout-btn" onClick={handleLogout}>
-            <span className="sidebar-link-icon">🚪</span>
+            <span className="sidebar-link-icon"><LogOut /></span>
             Sign Out
           </button>
         </div>
@@ -88,10 +105,12 @@ export default function AdminLayout() {
         {/* Top bar */}
         <header className="erp-topbar">
           <span className="topbar-title">
-            {currentItem?.icon} {currentItem?.label ?? "Admin Panel"}
+            {currentItem && <currentItem.Icon size={18} style={{ marginRight: 8, verticalAlign: 'middle', color: 'var(--brand)' }} />}
+            {currentItem?.label ?? "Admin Panel"}
           </span>
           <span className="topbar-badge">
-            🛡️ {user?.first_name ?? "Admin"}
+            <ShieldCheck size={14} style={{ marginRight: 6 }} />
+            {user?.first_name ?? "Admin"}
           </span>
         </header>
 

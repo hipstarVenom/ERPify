@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
+import {
+    GraduationCap,
+    CheckCircle2,
+    AlertCircle,
+    Inbox
+} from "lucide-react";
 
 interface Enrollment {
     id: string;
@@ -148,7 +154,7 @@ export default function FacultyGrades() {
             }));
 
             await API.post("/grades/bulk", payload);
-            setMsg({ type: "success", text: "✅ Grades submitted successfully for all students." });
+            setMsg({ type: "success", text: "Grades submitted successfully for all students." });
         } catch (err) {
             setMsg({ type: "error", text: "Failed to save grades. Please try again." });
         } finally {
@@ -161,7 +167,7 @@ export default function FacultyGrades() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">🎓</span> Student Grading
+                        <span className="card-title-icon"><GraduationCap /></span> Student Grading
                     </span>
                 </div>
 
@@ -234,6 +240,7 @@ export default function FacultyGrades() {
                     <div className="card-footer" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 15 }}>
                         {msg && (
                             <div className={`erp-alert erp-alert-${msg.type}`}>
+                                {msg.type === "success" ? <CheckCircle2 /> : <AlertCircle />}
                                 {msg.text}
                             </div>
                         )}
@@ -251,7 +258,7 @@ export default function FacultyGrades() {
 
             {!selectedCourseId && (
                 <div className="erp-empty" style={{ marginTop: 20 }}>
-                    <div className="erp-empty-icon">📂</div>
+                    <div className="erp-empty-icon"><Inbox /></div>
                     <div className="erp-empty-text">Select a course to view students and give grades</div>
                 </div>
             )}

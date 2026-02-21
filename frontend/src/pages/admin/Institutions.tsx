@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+  Building2,
+  Plus,
+  Trash2,
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle,
+  RotateCw
+} from "lucide-react";
 
 interface Institution { id: string; name: string; }
 
@@ -62,12 +71,17 @@ export default function Institutions() {
       {/* Add Form */}
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">🏛️</span> Add Institution</span>
+          <span className="card-title">
+            <span className="card-title-icon"><Building2 /></span> Add Institution
+          </span>
         </div>
 
         {msg && (
-          <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 14 }}>
-            {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+          <div style={{ padding: '20px 24px 0' }}>
+            <div className={`erp-alert erp-alert-${msg.type}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {msg.text}
+            </div>
           </div>
         )}
 
@@ -85,21 +99,25 @@ export default function Institutions() {
           </div>
           <div>
             <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
-              {loading ? "Creating…" : "+ Create Institution"}
+              {loading ? (
+                <><RotateCw size={14} className="animate-spin" style={{ marginRight: 8 }} />Creating…</>
+              ) : <><Plus size={18} style={{ marginRight: 8 }} /> Create Institution</>}
             </button>
           </div>
         </div>
       </div>
 
       {/* List */}
-      <div className="erp-card">
+      <div className="erp-card" style={{ marginTop: 20 }}>
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📋</span> All Institutions</span>
+          <span className="card-title">
+            <span className="card-title-icon"><ClipboardList /></span> All Institutions
+          </span>
           <span className="erp-badge badge-blue">{institutions.length} total</span>
         </div>
         {institutions.length === 0 ? (
           <div className="erp-empty">
-            <div className="erp-empty-icon">🏛️</div>
+            <div className="erp-empty-icon"><Building2 /></div>
             <div className="erp-empty-text">No institutions yet</div>
           </div>
         ) : (
@@ -119,10 +137,11 @@ export default function Institutions() {
                     <td><strong>{inst.name}</strong></td>
                     <td style={{ textAlign: "center" }}>
                       <button
-                        className="erp-btn erp-btn-danger"
+                        className="erp-btn erp-btn-danger erp-btn-sm"
                         onClick={() => setDeleteTarget(inst)}
+                        style={{ padding: '6px 12px' }}
                       >
-                        🗑️ Delete
+                        <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                       </button>
                     </td>
                   </tr>

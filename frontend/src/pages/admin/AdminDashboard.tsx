@@ -1,5 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
+import {
+  Building2,
+  FolderTree,
+  Users,
+  GraduationCap,
+  BookOpen,
+  ClipboardList
+} from "lucide-react";
 
 export default function AdminDashboard() {
   const [counts, setCounts] = useState({
@@ -29,11 +37,11 @@ export default function AdminDashboard() {
   }, []);
 
   const stats = [
-    { icon: "🏛️", label: "Institutions", value: counts.institutions, badge: "blue" },
-    { icon: "🗂️", label: "Departments", value: counts.departments, badge: "blue" },
-    { icon: "👥", label: "Students", value: counts.students, badge: "green" },
-    { icon: "🎓", label: "Faculty", value: counts.faculty, badge: "amber" },
-    { icon: "📚", label: "Courses", value: counts.courses, badge: "blue" },
+    { icon: <Building2 />, label: "Institutions", value: counts.institutions, color: "var(--brand)" },
+    { icon: <FolderTree />, label: "Departments", value: counts.departments, color: "#6366f1" },
+    { icon: <Users />, label: "Students", value: counts.students, color: "#10b981" },
+    { icon: <GraduationCap />, label: "Faculty", value: counts.faculty, color: "#f59e0b" },
+    { icon: <BookOpen />, label: "Courses", value: counts.courses, color: "#3b82f6" },
   ];
 
   return (
@@ -41,7 +49,7 @@ export default function AdminDashboard() {
       <div className="erp-stats-grid">
         {stats.map((s) => (
           <div key={s.label} className="erp-stat-card">
-            <div className="stat-icon">{s.icon}</div>
+            <div className="stat-icon" style={{ color: s.color }}>{s.icon}</div>
             <div className="stat-value">{s.value}</div>
             <div className="stat-label">{s.label}</div>
             <div className="stat-trend">↑ Active records</div>
@@ -52,15 +60,17 @@ export default function AdminDashboard() {
       <div className="erp-card">
         <div className="card-header">
           <span className="card-title">
-            <span className="card-title-icon">📋</span>
+            <span className="card-title-icon"><ClipboardList /></span>
             Quick Overview
           </span>
           <span className="erp-badge badge-blue">Live Data</span>
         </div>
-        <p style={{ color: "var(--text-secondary)", fontSize: "0.9rem", lineHeight: 1.7 }}>
-          Welcome to the ERPify Admin Control Panel. Use the sidebar to manage
-          institutions, departments, faculty, students and courses.
-        </p>
+        <div style={{ padding: 20 }}>
+          <p style={{ color: "var(--text-secondary)", fontSize: "1rem", lineHeight: 1.7, marginBottom: 0 }}>
+            Welcome to the ERPify Admin Control Panel. Use the sidebar to manage
+            institutions, departments, faculty, students and courses.
+          </p>
+        </div>
       </div>
     </>
   );

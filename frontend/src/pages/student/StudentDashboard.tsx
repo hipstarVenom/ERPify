@@ -1,6 +1,18 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../../context/AuthContext";
 import API from "../../api/api";
+import {
+    User,
+    BookOpen,
+    Calendar,
+    Trophy,
+    Inbox,
+    FileText,
+    ListChecks,
+    Book,
+    AlertCircle,
+    CheckCircle2
+} from "lucide-react";
 
 interface AttendanceSummary {
     course_name: string;
@@ -79,10 +91,14 @@ export default function StudentDashboard() {
             {/* 🔝 Hero Stats Section */}
             <div className="erp-stats-grid">
                 <div className="erp-stat-card welcome-card">
-                    <div className="stat-icon">👋</div>
+                    <div className="stat-icon">
+                        <User />
+                    </div>
                     <div className="stat-value">Welcome back,</div>
                     <div className="stat-label">{user?.first_name} {user?.last_name}</div>
-                    <div className="stat-trend">✓ Student ID: {user?.id?.slice(0, 8)}</div>
+                    <div className="stat-trend" style={{ color: 'var(--brand)' }}>
+                        <span style={{ fontSize: '0.9em', opacity: 0.8 }}>ID: {user?.id?.slice(0, 8)}</span>
+                    </div>
                 </div>
 
                 <div className="erp-stat-card attendance-hero-card">
@@ -102,15 +118,18 @@ export default function StudentDashboard() {
                         </div>
                         <div className="attendance-hero-info">
                             <div className="stat-label">Overall Attendance</div>
-                            <div className={`stat-trend ${overallAttendance < 75 ? 'text-danger' : 'text-success'}`}>
-                                {overallAttendance < 75 ? '⚠️ Below Threshold' : '✅ Good Standing'}
+                            <div className={`stat-trend ${overallAttendance < 75 ? 'text-danger' : 'text-success'}`} style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                                {overallAttendance < 75 ? <AlertCircle size={14} /> : <CheckCircle2 size={14} />}
+                                {overallAttendance < 75 ? 'Below Threshold' : 'Good Standing'}
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div className="erp-stat-card">
-                    <div className="stat-icon">📚</div>
+                    <div className="stat-icon">
+                        <BookOpen />
+                    </div>
                     <div className="stat-value">{courses.length}</div>
                     <div className="stat-label">Registered Courses</div>
                     <div className="stat-trend text-primary">Active Semester</div>
@@ -122,7 +141,7 @@ export default function StudentDashboard() {
                 <div className="erp-card">
                     <div className="card-header">
                         <span className="card-title">
-                            <span className="card-title-icon">📅</span>
+                            <span className="card-title-icon"><Calendar /></span>
                             Subject-wise Attendance
                         </span>
                     </div>
@@ -166,7 +185,9 @@ export default function StudentDashboard() {
                             </div>
                         ) : (
                             <div className="erp-empty">
-                                <div className="erp-empty-icon">📭</div>
+                                <div className="erp-empty-icon">
+                                    <Inbox />
+                                </div>
                                 <div className="erp-empty-text">No attendance records found</div>
                             </div>
                         )}
@@ -177,7 +198,7 @@ export default function StudentDashboard() {
                 <div className="erp-card">
                     <div className="card-header">
                         <span className="card-title">
-                            <span className="card-title-icon">🎯</span>
+                            <span className="card-title-icon"><Trophy /></span>
                             Academic Performance
                         </span>
                     </div>
@@ -226,7 +247,9 @@ export default function StudentDashboard() {
                             </div>
                         ) : (
                             <div className="erp-empty">
-                                <div className="erp-empty-icon">📝</div>
+                                <div className="erp-empty-icon">
+                                    <FileText />
+                                </div>
                                 <div className="erp-empty-text">Grades not yet published</div>
                             </div>
                         )}
@@ -238,7 +261,7 @@ export default function StudentDashboard() {
             <div className="erp-card mt-6">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📋</span>
+                        <span className="card-title-icon"><ListChecks /></span>
                         My Registered Courses
                     </span>
                 </div>
@@ -247,7 +270,9 @@ export default function StudentDashboard() {
                         <div className="course-cards-grid">
                             {courses.map((course) => (
                                 <div key={course.id} className="course-mini-card">
-                                    <div className="course-icon">📘</div>
+                                    <div className="course-icon">
+                                        <Book size={20} />
+                                    </div>
                                     <div className="course-info">
                                         <div className="course-code">{course.code}</div>
                                         <div className="course-name">{course.name}</div>
@@ -257,7 +282,9 @@ export default function StudentDashboard() {
                         </div>
                     ) : (
                         <div className="erp-empty">
-                            <div className="erp-empty-icon">📭</div>
+                            <div className="erp-empty-icon">
+                                <Inbox />
+                            </div>
                             <div className="erp-empty-text">No courses assigned yet</div>
                         </div>
                     )}

@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+  FolderTree,
+  Plus,
+  Trash2,
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle,
+  RotateCw
+} from "lucide-react";
 
 interface Institution { id: string; name: string; }
 interface Department { id: string; name: string; institution_id: string; }
@@ -73,12 +82,17 @@ export default function Departments() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">🗂️</span> Add Department</span>
+          <span className="card-title">
+            <span className="card-title-icon"><FolderTree /></span> Add Department
+          </span>
         </div>
 
         {msg && (
-          <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 16 }}>
-            {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+          <div style={{ padding: '20px 24px 0' }}>
+            <div className={`erp-alert erp-alert-${msg.type}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {msg.text}
+            </div>
           </div>
         )}
 
@@ -105,20 +119,24 @@ export default function Departments() {
           </div>
           <div>
             <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
-              {loading ? "Creating…" : "+ Create Department"}
+              {loading ? (
+                <><RotateCw size={14} className="animate-spin" style={{ marginRight: 8 }} />Creating…</>
+              ) : <><Plus size={18} style={{ marginRight: 8 }} /> Create Department</>}
             </button>
           </div>
         </div>
       </div>
 
-      <div className="erp-card">
+      <div className="erp-card" style={{ marginTop: 20 }}>
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📋</span> All Departments</span>
+          <span className="card-title">
+            <span className="card-title-icon"><ClipboardList /></span> All Departments
+          </span>
           <span className="erp-badge badge-blue">{departments.length} total</span>
         </div>
         {departments.length === 0 ? (
           <div className="erp-empty">
-            <div className="erp-empty-icon">🗂️</div>
+            <div className="erp-empty-icon"><FolderTree /></div>
             <div className="erp-empty-text">No departments added yet</div>
           </div>
         ) : (
@@ -139,8 +157,8 @@ export default function Departments() {
                     <td><strong>{dep.name}</strong></td>
                     <td><span className="erp-badge badge-blue">{getInstitutionName(dep.institution_id)}</span></td>
                     <td style={{ textAlign: "center" }}>
-                      <button className="erp-btn erp-btn-danger" onClick={() => setDeleteTarget(dep)}>
-                        🗑️ Delete
+                      <button className="erp-btn erp-btn-danger erp-btn-sm" onClick={() => setDeleteTarget(dep)} style={{ padding: '6px 12px' }}>
+                        <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                       </button>
                     </td>
                   </tr>
