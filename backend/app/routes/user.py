@@ -2,7 +2,7 @@
 
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from app.database import SessionLocal
 from app.models.user import User
 from app.schemas.user import UserCreate, UserResponse
@@ -26,13 +26,10 @@ def get_db():
 # 🔹 POST - Create User
 @router.post("/", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-
     new_user = User(**user.model_dump())
-
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
-
     return new_user
 
 
@@ -45,31 +42,28 @@ def get_users(db: Session = Depends(get_db)):
 # 🔹 GET - Get User By ID
 @router.get("/{user_id}", response_model=UserResponse)
 def get_user(user_id: str, db: Session = Depends(get_db)):
-
-    user = db.query(User).filter(
-        User.id == user_id
-    ).first()
-
+    user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-
     return user
 
-# 🔹 POST - Login User
+
+# 🔹 POST - Login (email + password)
 @router.post("/login", response_model=UserResponse)
 def login_user(
-    first_name: str = Body(...),
-    last_name: str = Body(...),
-    role: str = Body(...),
+    email: str = Body(...),
+    password: str = Body(...),
     db: Session = Depends(get_db)
 ):
-    user = db.query(User).filter(
-        User.first_name == first_name,
-        User.last_name == last_name,
-        User.role == role
-    ).first()
+    # Find user by email
+    user = db.query(User).filter(User.email == email).first()
 
     if not user:
-        raise HTTPException(status_code=404, detail="Invalid credentials")
+        raise HTTPException(status_code=401, detail="Invalid email or password")
+
+    # Direct comparison (plain text stored in DB)
+    # TODO: switch to bcrypt.checkpw() once passwords are hashed
+    if user.password_hash != password:
+        raise HTTPException(status_code=401, detail="Invalid email or password")
 
     return user

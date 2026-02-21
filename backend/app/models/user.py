@@ -24,3 +24,7 @@ class User(Base):
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
     role = Column(String(50), nullable=False)
+
+    # ── Auth fields ──────────────────────────────
+    email = Column(String(255), unique=True, nullable=True)
+    password_hash = Column(String(255), nullable=True)
