@@ -137,51 +137,123 @@ export default function StudentDashboard() {
             </div>
 
             <div className="erp-grid-2-col">
-                {/* 📅 Detailed Attendance Section */}
+                {/* 📊 Vertical Bar Chart Comparison Section */}
                 <div className="erp-card">
                     <div className="card-header">
                         <span className="card-title">
                             <span className="card-title-icon"><Calendar /></span>
-                            Subject-wise Attendance
+                            Attendance Comparison Chart
                         </span>
+                        {attendance.length > 0 && (
+                            <span className="erp-badge badge-blue">
+                                Subject Breakdown
+                            </span>
+                        )}
                     </div>
-                    <div className="card-body">
+                    <div className="card-body" style={{ padding: '30px 24px' }}>
                         {attendance.length > 0 ? (
-                            <div className="subject-attendance-list">
-                                {attendance.map((item, index) => {
-                                    const status = item.attendance_percentage >= 85 ? 'Safe'
-                                        : item.attendance_percentage >= 75 ? 'Warning'
-                                            : 'Shortage';
-                                    const statusColor = status === 'Safe' ? 'var(--success)'
-                                        : status === 'Warning' ? 'var(--warning)'
-                                            : 'var(--danger)';
-
-                                    return (
-                                        <div key={index} className="subject-attendance-item">
-                                            <div className="subject-info">
-                                                <div className="subject-name-group">
-                                                    <span className="subject-name">{item.course_name}</span>
-                                                    <span className="subject-classes">{item.attended_classes}/{item.total_classes} Classes</span>
-                                                </div>
-                                                <span className="attendance-status-tag" style={{ color: statusColor, border: `1px solid ${statusColor}` }}>
-                                                    {status}
-                                                </span>
-                                            </div>
-                                            <div className="attendance-progress-container">
-                                                <div className="attendance-progress-bar">
-                                                    <div
-                                                        className={`attendance-progress-fill ${item.attendance_percentage < 75 ? 'low' : ''}`}
-                                                        style={{
-                                                            width: `${item.attendance_percentage}%`,
-                                                            background: statusColor
-                                                        }}
-                                                    ></div>
-                                                </div>
-                                                <span className="attendance-percent-text">{item.attendance_percentage.toFixed(1)}%</span>
-                                            </div>
+                            <div className="attendance-chart-container" style={{ position: 'relative', marginTop: 10 }}>
+                                {/* Chart Area */}
+                                <div style={{
+                                    height: '320px',
+                                    display: 'flex',
+                                    alignItems: 'flex-end',
+                                    justifyContent: 'space-around',
+                                    borderLeft: '2px solid var(--border)',
+                                    borderBottom: '2px solid var(--border)',
+                                    paddingRight: '10px',
+                                    position: 'relative',
+                                    gap: 15,
+                                    background: 'linear-gradient(to bottom, rgba(0,0,0,0.01) 0%, rgba(255,255,255,0) 100%)'
+                                }}>
+                                    {/* Y-Axis Labels & Grid Lines */}
+                                    {[100, 75, 50, 25, 0].map((val) => (
+                                        <div key={val} style={{
+                                            position: 'absolute',
+                                            left: -45,
+                                            bottom: `${val}%`,
+                                            width: 'calc(100% + 45px)',
+                                            height: 0,
+                                            borderTop: val === 0 ? 'none' : '1px dashed rgba(0,0,0,0.05)',
+                                            zIndex: 0
+                                        }}>
+                                            <span style={{
+                                                position: 'absolute',
+                                                top: -8,
+                                                left: 0,
+                                                fontSize: '0.7rem',
+                                                color: val === 75 ? 'var(--warning)' : 'var(--text-muted)',
+                                                fontWeight: val === 75 ? 700 : 500
+                                            }}>{val}%</span>
                                         </div>
-                                    );
-                                })}
+                                    ))}
+
+                                    {/* Bars */}
+                                    {attendance.map((item, index) => {
+                                        const status = item.attendance_percentage >= 85 ? 'Safe'
+                                            : item.attendance_percentage >= 75 ? 'Warning'
+                                                : 'Shortage';
+                                        const statusColor = status === 'Safe' ? '#10b981'
+                                            : status === 'Warning' ? '#f59e0b'
+                                                : '#ef4444';
+
+                                        return (
+                                            <div key={index} style={{
+                                                flex: 1,
+                                                height: '100%',
+                                                display: 'flex',
+                                                flexDirection: 'column',
+                                                alignItems: 'center',
+                                                justifyContent: 'flex-end',
+                                                zIndex: 1,
+                                                maxWidth: '60px',
+                                                cursor: 'pointer'
+                                            }} title={`${item.course_name}: ${item.attendance_percentage.toFixed(1)}%`}>
+                                                <div
+                                                    className="chart-bar"
+                                                    style={{
+                                                        width: '100%',
+                                                        height: `${item.attendance_percentage}%`,
+                                                        background: `linear-gradient(to top, ${statusColor}dd, ${statusColor})`,
+                                                        borderRadius: '6px 6px 0 0',
+                                                        position: 'relative',
+                                                        transition: 'height 1.5s cubic-bezier(0.19, 1, 0.22, 1)',
+                                                        boxShadow: `0 4px 12px ${statusColor}33`
+                                                    }}
+                                                >
+                                                    <span style={{
+                                                        position: 'absolute',
+                                                        top: -24,
+                                                        left: '50%',
+                                                        transform: 'translateX(-50%)',
+                                                        fontSize: '0.75rem',
+                                                        fontWeight: 800,
+                                                        color: statusColor
+                                                    }}>
+                                                        {item.attendance_percentage.toFixed(0)}%
+                                                    </span>
+                                                </div>
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    bottom: -40,
+                                                    textAlign: 'center',
+                                                    width: 'max-content',
+                                                    maxWidth: '80px',
+                                                    fontSize: '0.7rem',
+                                                    fontWeight: 600,
+                                                    color: 'var(--text-secondary)',
+                                                    lineHeight: 1.2,
+                                                    padding: '8px 0'
+                                                }}>
+                                                    {item.course_name.split(' ').map((word, i) => (
+                                                        <div key={i}>{word}</div>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        );
+                                    })}
+                                </div>
+                                <div style={{ height: 40 }}></div>
                             </div>
                         ) : (
                             <div className="erp-empty">
