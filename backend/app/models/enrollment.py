@@ -31,6 +31,12 @@ class Enrollment(Base):
         nullable=False
     )
 
+    faculty_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("faculty.user_id", ondelete="SET NULL"),
+        nullable=True
+    )
+
     semester_id = Column(String(50), nullable=False)
 
     status = Column(String(50), nullable=False, default="enrolled")
