@@ -31,27 +31,40 @@ def get_student_dashboard(user_id: UUID, db: Session = Depends(get_db)):
     if not student:
         raise HTTPException(status_code=404, detail="Student not found")
 
-    # 2. Get enrollments with course details
-    enrollments = db.query(Enrollment, Course).join(
+    # 2. Get active enrollments with course details (ONLY when status is 'enrolled')
+    enrollment_data = db.query(Enrollment, Course).join(
         Course, Enrollment.course_id == Course.id
-    ).filter(Enrollment.student_id == user_id).all()
+    ).filter(
+        Enrollment.student_id == user_id,
+        Enrollment.status == "enrolled"  # 🔹 Filtering here instead of deleting
+    ).all()
 
-    # 3. Get attendance summaries
+    # Get the list of active enrollment IDs to filter grades properly
+    active_enrollment_ids = [e.id for e, _ in enrollment_data]
+    active_course_ids = [c.id for _, c in enrollment_data]
+
+    # 3. Get attendance summaries only for those active courses
     attendance_summaries = db.query(AttendanceSummary, Course).join(
         Course, AttendanceSummary.course_id == Course.id
-    ).filter(AttendanceSummary.student_id == user_id).all()
+    ).filter(
+        AttendanceSummary.student_id == user_id,
+        AttendanceSummary.course_id.in_(active_course_ids)
+    ).all() if active_course_ids else []
 
-    # 4. Get grades
+    # 4. Get grades only for those active enrollments
     grades = db.query(Grade, Course).join(
         Enrollment, Grade.enrollment_id == Enrollment.id
     ).join(
         Course, Enrollment.course_id == Course.id
-    ).filter(Enrollment.student_id == user_id).all()
+    ).filter(
+        Enrollment.student_id == user_id,
+        Enrollment.id.in_(active_enrollment_ids)
+    ).all() if active_enrollment_ids else []
 
     return {
         "courses": [
             {"id": str(c.id), "name": c.course_name, "code": c.course_code} 
-            for e, c in enrollments
+            for e, c in enrollment_data
         ],
         "attendance": [
             {
