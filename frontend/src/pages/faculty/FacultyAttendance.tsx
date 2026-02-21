@@ -124,6 +124,7 @@ export default function FacultyAttendance() {
                 institution_id: enr.institution_id,
                 enrollment_id: enr.id,
                 attendance_date: attendanceDate,
+                course_id: enr.course_id,
                 status: attendanceData[enr.id] ?? false
             }));
 

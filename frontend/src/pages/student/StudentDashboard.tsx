@@ -61,6 +61,10 @@ export default function StudentDashboard() {
         "U": { label: "Re-appear", color: "#ef4444" },
     };
 
+    const overallAttendance = attendance.length > 0
+        ? attendance.reduce((acc, curr) => acc + curr.attendance_percentage, 0) / attendance.length
+        : 0;
+
     if (loading) {
         return (
             <div className="erp-loading-container">
@@ -72,12 +76,37 @@ export default function StudentDashboard() {
 
     return (
         <div className="erp-dashboard-content">
+            {/* 🔝 Hero Stats Section */}
             <div className="erp-stats-grid">
-                <div className="erp-stat-card">
+                <div className="erp-stat-card welcome-card">
                     <div className="stat-icon">👋</div>
-                    <div className="stat-value">Welcome</div>
+                    <div className="stat-value">Welcome back,</div>
                     <div className="stat-label">{user?.first_name} {user?.last_name}</div>
-                    <div className="stat-trend">✓ Logged in as Student</div>
+                    <div className="stat-trend">✓ Student ID: {user?.id?.slice(0, 8)}</div>
+                </div>
+
+                <div className="erp-stat-card attendance-hero-card">
+                    <div className="attendance-hero-content">
+                        <div className="attendance-hero-visual">
+                            <svg viewBox="0 0 36 36" className="circular-chart blue">
+                                <path className="circle-bg"
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <path className="circle"
+                                    strokeDasharray={`${overallAttendance}, 100`}
+                                    style={{ stroke: overallAttendance < 75 ? '#ef4444' : '#10b981' }}
+                                    d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
+                                />
+                                <text x="18" y="20.35" className="percentage">{overallAttendance.toFixed(1)}%</text>
+                            </svg>
+                        </div>
+                        <div className="attendance-hero-info">
+                            <div className="stat-label">Overall Attendance</div>
+                            <div className={`stat-trend ${overallAttendance < 75 ? 'text-danger' : 'text-success'}`}>
+                                {overallAttendance < 75 ? '⚠️ Below Threshold' : '✅ Good Standing'}
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <div className="erp-stat-card">
@@ -86,61 +115,54 @@ export default function StudentDashboard() {
                     <div className="stat-label">Registered Courses</div>
                     <div className="stat-trend text-primary">Active Semester</div>
                 </div>
-
-                <div className="erp-stat-card">
-                    <div className="stat-icon">📈</div>
-                    <div className="stat-value">
-                        {attendance.length > 0
-                            ? (attendance.reduce((acc, curr) => acc + curr.attendance_percentage, 0) / attendance.length).toFixed(1)
-                            : 0}%
-                    </div>
-                    <div className="stat-label">Avg. Attendance</div>
-                    <div className="stat-trend text-success">Overall Status</div>
-                </div>
             </div>
 
             <div className="erp-grid-2-col">
-                {/* Attendance Summary Section */}
+                {/* 📅 Detailed Attendance Section */}
                 <div className="erp-card">
                     <div className="card-header">
                         <span className="card-title">
                             <span className="card-title-icon">📅</span>
-                            Attendance Summary
+                            Subject-wise Attendance
                         </span>
                     </div>
                     <div className="card-body">
                         {attendance.length > 0 ? (
-                            <div className="erp-table-container">
-                                <table className="erp-table">
-                                    <thead>
-                                        <tr>
-                                            <th>Course</th>
-                                            <th>Attended</th>
-                                            <th>Total</th>
-                                            <th>Percentage</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {attendance.map((item, index) => (
-                                            <tr key={index}>
-                                                <td><strong>{item.course_name}</strong></td>
-                                                <td>{item.attended_classes}</td>
-                                                <td>{item.total_classes}</td>
-                                                <td>
-                                                    <div className="attendance-progress-container">
-                                                        <div className="attendance-progress-bar">
-                                                            <div
-                                                                className={`attendance-progress-fill ${item.attendance_percentage < 75 ? 'low' : ''}`}
-                                                                style={{ width: `${item.attendance_percentage}%` }}
-                                                            ></div>
-                                                        </div>
-                                                        <span className="attendance-percent-text">{item.attendance_percentage.toFixed(1)}%</span>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                            <div className="subject-attendance-list">
+                                {attendance.map((item, index) => {
+                                    const status = item.attendance_percentage >= 85 ? 'Safe'
+                                        : item.attendance_percentage >= 75 ? 'Warning'
+                                            : 'Shortage';
+                                    const statusColor = status === 'Safe' ? 'var(--success)'
+                                        : status === 'Warning' ? 'var(--warning)'
+                                            : 'var(--danger)';
+
+                                    return (
+                                        <div key={index} className="subject-attendance-item">
+                                            <div className="subject-info">
+                                                <div className="subject-name-group">
+                                                    <span className="subject-name">{item.course_name}</span>
+                                                    <span className="subject-classes">{item.attended_classes}/{item.total_classes} Classes</span>
+                                                </div>
+                                                <span className="attendance-status-tag" style={{ color: statusColor, border: `1px solid ${statusColor}` }}>
+                                                    {status}
+                                                </span>
+                                            </div>
+                                            <div className="attendance-progress-container">
+                                                <div className="attendance-progress-bar">
+                                                    <div
+                                                        className={`attendance-progress-fill ${item.attendance_percentage < 75 ? 'low' : ''}`}
+                                                        style={{
+                                                            width: `${item.attendance_percentage}%`,
+                                                            background: statusColor
+                                                        }}
+                                                    ></div>
+                                                </div>
+                                                <span className="attendance-percent-text">{item.attendance_percentage.toFixed(1)}%</span>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
                         ) : (
                             <div className="erp-empty">
@@ -151,7 +173,7 @@ export default function StudentDashboard() {
                     </div>
                 </div>
 
-                {/* Grades / Marks Section */}
+                {/* 🎯 Academic Performance Section */}
                 <div className="erp-card">
                     <div className="card-header">
                         <span className="card-title">
