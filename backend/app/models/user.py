@@ -26,5 +26,5 @@ class User(Base):
     role = Column(String(50), nullable=False)
 
     # ── Auth fields ──────────────────────────────
-    email = Column(String(255), unique=True, nullable=True)
-    password_hash = Column(String(255), nullable=True)
+    email = Column(String(255), unique=True, nullable=False)
+    password_hash = Column(String(255), nullable=False)

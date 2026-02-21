@@ -21,3 +21,8 @@ class Faculty(Base):
     )
 
     designation = Column(String, nullable=False)
+    course_id = Column(
+        UUID(as_uuid=True),
+        ForeignKey("course.id"),
+        nullable=True
+    )

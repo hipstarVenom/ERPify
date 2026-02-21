@@ -10,6 +10,9 @@ import Faculty from "../pages/admin/Faculty";
 import Courses from "../pages/admin/Courses";
 import Departments from "../pages/admin/Departments";
 import Enrollments from "../pages/admin/Enrollments";
+import FacultyDashboard from "../pages/faculty/FacultyDashboard";
+import FacultyAttendance from "../pages/faculty/FacultyAttendance";
+import AttendanceHistory from "../pages/faculty/AttendanceHistory";
 
 export default function AppRoutes() {
   return (
@@ -17,7 +20,11 @@ export default function AppRoutes() {
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/student" element={<StudentLayout />} />
-      <Route path="/faculty" element={<FacultyLayout />} />
+      <Route path="/faculty" element={<FacultyLayout />}>
+        <Route index element={<FacultyDashboard />} />
+        <Route path="attendance" element={<FacultyAttendance />} />
+        <Route path="history" element={<AttendanceHistory />} />
+      </Route>
 
       {/* Admin portal — nested routes */}
       <Route path="/admin" element={<AdminLayout />}>

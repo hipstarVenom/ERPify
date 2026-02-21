@@ -80,8 +80,9 @@ export default function Faculty() {
       setTimeout(() => setMsg(null), 4000);
       fetchFaculty();
       API.get("/users/").then((r) => setUsers(r.data));
-    } catch {
-      setMsg({ type: "error", text: "Error creating faculty." });
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || "Error creating faculty.";
+      setMsg({ type: "error", text: errorMsg });
     } finally {
       setLoading(false);
     }

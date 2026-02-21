@@ -76,8 +76,9 @@ export default function Students() {
       setTimeout(() => setMsg(null), 4000);
       fetchStudents();
       API.get("/users/").then((r) => setUsers(r.data));
-    } catch {
-      setMsg({ type: "error", text: "Error enrolling student." });
+    } catch (err: any) {
+      const errorMsg = err.response?.data?.detail || "Error enrolling student.";
+      setMsg({ type: "error", text: errorMsg });
     } finally {
       setLoading(false);
     }

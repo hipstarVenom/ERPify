@@ -26,7 +26,16 @@ def get_db():
 # 🔹 POST - Create User
 @router.post("/", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
-    new_user = User(**user.model_dump())
+    user_data = user.model_dump()
+    
+    # Auto-generate if missing (fixes admin forms that don't have these fields)
+    if not user_data.get("email"):
+        import uuid
+        user_data["email"] = f"{user.first_name.lower()}.{user.last_name.lower()}.{uuid.uuid4().hex[:4]}@erpify.com"
+    if not user_data.get("password_hash"):
+        user_data["password_hash"] = "erp123" # Default password
+        
+    new_user = User(**user_data)
     db.add(new_user)
     db.commit()
     db.refresh(new_user)

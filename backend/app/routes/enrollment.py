@@ -31,12 +31,14 @@ def create_enrollment(data: EnrollmentCreate, db: Session = Depends(get_db)):
     db.refresh(enrollment)
     return enrollment
 
-# 🔹 GET - Get Enrollments (optional filter by student_id)
+# 🔹 GET - Get Enrollments (optional filter by student_id or faculty_id)
 @router.get("/", response_model=list[EnrollmentResponse])
-def get_enrollments(student_id: Optional[str] = None, db: Session = Depends(get_db)):
+def get_enrollments(student_id: Optional[str] = None, faculty_id: Optional[str] = None, db: Session = Depends(get_db)):
     query = db.query(Enrollment)
     if student_id:
         query = query.filter(Enrollment.student_id == student_id)
+    if faculty_id:
+        query = query.filter(Enrollment.faculty_id == faculty_id)
     return query.all()
 
 # 🔹 PATCH - Update Enrollment Status
