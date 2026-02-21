@@ -86,16 +86,11 @@ def bulk_grades(data: List[GradeCreate], db: Session = Depends(get_db)):
 
 # 🔹 GET - Get All Grades
 @router.get("/", response_model=List[GradeResponse])
-<<<<<<< HEAD
-def get_grades(enrollment_id: str = None, db: Session = Depends(get_db)):
-=======
 def get_grades(enrollment_id: Optional[str] = None, db: Session = Depends(get_db)):
->>>>>>> f718be1599240da8668d0dafb4e32e00c5fcdfb4
     query = db.query(Grade)
     if enrollment_id:
         query = query.filter(Grade.enrollment_id == enrollment_id)
     return query.all()
-<<<<<<< HEAD
 
 
 # 🔹 POST - Bulk Update/Create Grades
@@ -111,8 +106,6 @@ def bulk_grades(data: List[GradeCreate], db: Session = Depends(get_db)):
             db.add(Grade(**item.model_dump()))
     db.commit()
     return {"message": "Grades updated successfully"}
-=======
->>>>>>> f718be1599240da8668d0dafb4e32e00c5fcdfb4
 
 
 # 🔹 GET - Get Grade By ID
