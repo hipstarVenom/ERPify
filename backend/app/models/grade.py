@@ -17,10 +17,7 @@ class Grade(Base):
 
     institution_id = Column(
         UUID(as_uuid=True),
-<<<<<<< HEAD
         ForeignKey("institution.id", ondelete="CASCADE"),
-=======
->>>>>>> f718be1599240da8668d0dafb4e32e00c5fcdfb4
         nullable=False
     )
 
@@ -32,7 +29,3 @@ class Grade(Base):
 
     marks = Column(Integer, nullable=False)
     grade = Column(String(5), nullable=False)
-<<<<<<< HEAD
-=======
-    
->>>>>>> f718be1599240da8668d0dafb4e32e00c5fcdfb4
