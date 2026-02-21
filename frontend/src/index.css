@@ -743,10 +743,145 @@ body {
 }
 
 /* ═══════════════════════════════════════════════════════════
-   GLOBAL ANIMATIONS
+   STUDENT DASHBOARD SPECIFIC
 ═══════════════════════════════════════════════════════════ */
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
+.erp-grid-2-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+  gap: 20px;
 }
+
+.attendance-progress-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+}
+
+.attendance-progress-bar {
+  flex: 1;
+  height: 8px;
+  background: var(--bg-page);
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.attendance-progress-fill {
+  height: 100%;
+  background: var(--success);
+  border-radius: 999px;
+  transition: width 0.5s ease;
+}
+
+.attendance-progress-fill.low {
+  background: var(--danger);
+}
+
+.attendance-percent-text {
+  font-size: 0.8rem;
+  font-weight: 700;
+  min-width: 45px;
+  color: var(--text-primary);
+}
+
+.grade-badge-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.grade-label {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.course-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.course-mini-card {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  background: var(--bg-hover);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  transition: transform 0.2s;
+}
+
+.course-mini-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--brand);
+}
+
+.course-icon {
+  font-size: 1.5rem;
+  background: var(--bg-card);
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.course-info {
+  flex: 1;
+}
+
+.course-code {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--brand);
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.course-name {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.erp-loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 60vh;
+  gap: 16px;
+  color: var(--text-muted);
+}
+
+.erp-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border);
+  border-top-color: var(--brand);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+.marks-display {
+  display: flex;
+  align-items: baseline;
+  gap: 2px;
+}
+
+.marks-value {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.marks-max {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.mt-6 { margin-top: 1.5rem; }
