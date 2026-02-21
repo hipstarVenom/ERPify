@@ -14,7 +14,6 @@ export default function StudentLayout() {
 
   return (
     <div className="erp-shell">
-      {/* Sidebar */}
       <aside className="erp-sidebar">
         <div className="sidebar-brand">
           <span className="sidebar-brand-icon">⚡</span>
@@ -44,7 +43,6 @@ export default function StudentLayout() {
         </div>
       </aside>
 
-      {/* Main */}
       <div className="erp-main">
         <header className="erp-topbar">
           <span className="topbar-title">📊 Student Dashboard</span>
@@ -55,9 +53,7 @@ export default function StudentLayout() {
             <div className="erp-stat-card">
               <div className="stat-icon">👋</div>
               <div className="stat-value">Welcome</div>
-              <div className="stat-label">
-                {user?.first_name} {user?.last_name}
-              </div>
+              <div className="stat-label">{user?.first_name} {user?.last_name}</div>
               <div className="stat-trend">✓ Logged in as Student</div>
             </div>
           </div>

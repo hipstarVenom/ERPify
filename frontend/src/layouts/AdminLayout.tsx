@@ -9,6 +9,7 @@ const NAV_ITEMS = [
   { to: "/admin/faculty", label: "Faculty", icon: "🎓" },
   { to: "/admin/courses", label: "Courses", icon: "📚" },
   { to: "/admin/students", label: "Students", icon: "👥" },
+  { to: "/admin/enrollments", label: "Enrollments", icon: "📋" },
 ];
 
 export default function AdminLayout() {

@@ -9,16 +9,17 @@ import Students from "../pages/admin/Students";
 import Faculty from "../pages/admin/Faculty";
 import Courses from "../pages/admin/Courses";
 import Departments from "../pages/admin/Departments";
-
+import Enrollments from "../pages/admin/Enrollments";
 
 export default function AppRoutes() {
   return (
     <Routes>
-      {/* Redirect root directly to unified login */}
       <Route path="/" element={<Navigate to="/login" replace />} />
       <Route path="/login" element={<Login />} />
       <Route path="/student" element={<StudentLayout />} />
       <Route path="/faculty" element={<FacultyLayout />} />
+
+      {/* Admin portal — nested routes */}
       <Route path="/admin" element={<AdminLayout />}>
         <Route index element={<AdminDashboard />} />
         <Route path="institutions" element={<Institutions />} />
@@ -26,6 +27,7 @@ export default function AppRoutes() {
         <Route path="faculty" element={<Faculty />} />
         <Route path="courses" element={<Courses />} />
         <Route path="students" element={<Students />} />
+        <Route path="enrollments" element={<Enrollments />} />
       </Route>
     </Routes>
   );
