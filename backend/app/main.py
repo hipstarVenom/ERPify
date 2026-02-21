@@ -1,6 +1,9 @@
 from fastapi import FastAPI
 from sqlalchemy import text
-from app.database import engine
+from app.database import engine, Base
+import app.models.grade # Ensure models are loaded for create_all
+
+Base.metadata.create_all(bind=engine)
 
 from app.routes import course
 from app.routes import attendance
@@ -29,9 +32,13 @@ app.include_router(faculty.router)
 app.include_router(grade.router)
 app.include_router(enrollment.router)
 
+origins = [
+    "http://localhost:5173",  # frontend
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
