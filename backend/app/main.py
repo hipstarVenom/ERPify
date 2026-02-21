@@ -1,7 +1,17 @@
 from fastapi import FastAPI
 from sqlalchemy import text
 from app.database import engine, Base
-import app.models.grade # Ensure models are loaded for create_all
+# Import all models to ensure they are registered with Base.metadata
+import app.models.institution
+import app.models.department
+import app.models.user
+import app.models.student
+import app.models.faculty
+import app.models.course
+import app.models.enrollment
+import app.models.attendance
+import app.models.grade
+import app.models.attendance_summary
 
 Base.metadata.create_all(bind=engine)
 
@@ -34,6 +44,7 @@ app.include_router(enrollment.router)
 
 origins = [
     "http://localhost:5173",  # frontend
+    "http://127.0.0.1:5173",  # alternate local address
 ]
 
 app.add_middleware(
