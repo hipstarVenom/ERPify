@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Outlet, NavLink } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useTheme } from "../context/ThemeContext";
 
@@ -22,10 +22,10 @@ export default function StudentLayout() {
 
         <span className="sidebar-section-label">Student Portal</span>
         <nav className="sidebar-nav">
-          <a className="sidebar-link active">
+          <NavLink to="/student" end className={({ isActive }) => `sidebar-link ${isActive ? 'active' : ''}`}>
             <span className="sidebar-link-icon">📊</span>
             Dashboard
-          </a>
+          </NavLink>
         </nav>
 
         <div className="sidebar-footer">
@@ -45,30 +45,11 @@ export default function StudentLayout() {
 
       <div className="erp-main">
         <header className="erp-topbar">
-          <span className="topbar-title">📊 Student Dashboard</span>
+          <span className="topbar-title">📊 Student Portal</span>
           <span className="topbar-badge">📚 {user?.first_name ?? "Student"}</span>
         </header>
         <main className="erp-content">
-          <div className="erp-stats-grid">
-            <div className="erp-stat-card">
-              <div className="stat-icon">👋</div>
-              <div className="stat-value">Welcome</div>
-              <div className="stat-label">{user?.first_name} {user?.last_name}</div>
-              <div className="stat-trend">✓ Logged in as Student</div>
-            </div>
-          </div>
-          <div className="erp-card">
-            <div className="card-header">
-              <span className="card-title">
-                <span className="card-title-icon">📋</span>
-                My Courses
-              </span>
-            </div>
-            <div className="erp-empty">
-              <div className="erp-empty-icon">📭</div>
-              <div className="erp-empty-text">No courses assigned yet</div>
-            </div>
-          </div>
+          <Outlet />
         </main>
       </div>
     </div>
