@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+  GraduationCap,
+  UserPlus,
+  Trash2,
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle,
+  RotateCw
+} from "lucide-react";
 
 interface Institution { id: string; name: string; }
 interface Department { id: string; name: string; institution_id: string; }
@@ -115,12 +124,17 @@ export default function Faculty() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">🎓</span> Add Faculty Member</span>
+          <span className="card-title">
+            <span className="card-title-icon"><GraduationCap /></span> Add Faculty Member
+          </span>
         </div>
 
         {msg && (
-          <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 16 }}>
-            {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+          <div style={{ padding: '20px 24px 0' }}>
+            <div className={`erp-alert erp-alert-${msg.type}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {msg.text}
+            </div>
           </div>
         )}
 
@@ -174,8 +188,8 @@ export default function Faculty() {
           <div>
             <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
               {loading ? (
-                <><span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 6 }} />Creating…</>
-              ) : "+ Add Faculty"}
+                <><RotateCw size={14} className="animate-spin" style={{ marginRight: 8 }} />Creating…</>
+              ) : <><UserPlus size={18} style={{ marginRight: 8 }} /> Add Faculty</>}
             </button>
           </div>
         </div>
@@ -183,12 +197,14 @@ export default function Faculty() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📋</span> All Faculty Members</span>
+          <span className="card-title">
+            <span className="card-title-icon"><ClipboardList /></span> All Faculty Members
+          </span>
           <span className="erp-badge badge-blue">{facultyList.length} total</span>
         </div>
         {facultyList.length === 0 ? (
           <div className="erp-empty">
-            <div className="erp-empty-icon">🎓</div>
+            <div className="erp-empty-icon"><GraduationCap /></div>
             <div className="erp-empty-text">No faculty members added yet</div>
           </div>
         ) : (
@@ -209,8 +225,8 @@ export default function Faculty() {
                     <td>{getDeptName(f.department_id)}</td>
                     <td><span className="erp-badge badge-blue">{getInstByDept(f.department_id)}</span></td>
                     <td style={{ textAlign: "center" }}>
-                      <button className="erp-btn erp-btn-danger" onClick={() => setDeleteTarget(f)}>
-                        🗑️ Delete
+                      <button className="erp-btn erp-btn-danger erp-btn-sm" onClick={() => setDeleteTarget(f)} style={{ padding: '6px 12px' }}>
+                        <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                       </button>
                     </td>
                   </tr>

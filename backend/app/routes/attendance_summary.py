@@ -78,3 +78,52 @@ def get_student_attendance_summary(student_id: UUID, db: Session = Depends(get_d
         summaries.append(summary)
         
     return summaries
+
+@router.get("/faculty/{faculty_id}")
+def get_faculty_attendance_summary(faculty_id: UUID, db: Session = Depends(get_db)):
+    from app.models.course import Course
+    # 1. Get all enrollments managed by this faculty
+    enrollments = db.query(Enrollment).filter(Enrollment.faculty_id == faculty_id).all()
+    
+    if not enrollments:
+        return []
+
+    # 2. Group by course and calculate average attendance
+    course_stats = {}
+    for enrollment in enrollments:
+        c_id = str(enrollment.course_id)
+        if c_id not in course_stats:
+            # Need to get course name
+            course = db.query(Course).filter(Course.id == enrollment.course_id).first()
+            course_stats[c_id] = {
+                "course_id": c_id,
+                "course_name": course.course_name if course else "Unknown",
+                "total_student_classes": 0,
+                "total_student_attended": 0
+            }
+        
+        # Calculate attendance for this specific enrollment
+        total_classes = db.query(func.count(Attendance.id)).filter(
+            Attendance.enrollment_id == enrollment.id
+        ).scalar() or 0
+        
+        attended_classes = db.query(func.count(Attendance.id)).filter(
+            Attendance.enrollment_id == enrollment.id,
+            Attendance.status == True
+        ).scalar() or 0
+        
+        course_stats[c_id]["total_student_classes"] += int(total_classes)
+        course_stats[c_id]["total_student_attended"] += int(attended_classes)
+
+    # 3. Finalize percentages
+    result = []
+    for stats in course_stats.values():
+        total = stats["total_student_classes"]
+        attended = stats["total_student_attended"]
+        percentage = (attended / total * 100) if total > 0 else 0
+        result.append({
+            "course_name": stats["course_name"],
+            "attendance_percentage": round(float(percentage), 2)
+        })
+    
+    return result

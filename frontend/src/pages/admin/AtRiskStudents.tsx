@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import axios from "axios";
+import {
+    AlertTriangle,
+    Bot,
+    RotateCw,
+    Zap,
+    CheckCircle2,
+    AlertCircle,
+    Send
+} from "lucide-react";
 
 interface StudentRiskData {
     id: string;
@@ -104,7 +113,7 @@ export default function AtRiskStudents() {
                 data: atRiskOnly
             });
 
-            setStatusMsg({ type: "success", text: `🚀 Automation triggered! Sent ${atRiskOnly.length} students to n8n.` });
+            setStatusMsg({ type: "success", text: `Automation triggered! Sent ${atRiskOnly.length} students to n8n.` });
         } catch (err) {
             setStatusMsg({ type: "error", text: "Failed to connect to n8n webhook. Please check the URL." });
         } finally {
@@ -117,7 +126,7 @@ export default function AtRiskStudents() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">🤖</span> AI Risk Automation
+                        <span className="card-title-icon"><Bot /></span> AI Risk Automation
                     </span>
                     <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
                         <div className="badge-blue erp-badge">n8n Integrated</div>
@@ -132,6 +141,7 @@ export default function AtRiskStudents() {
                 {statusMsg && (
                     <div style={{ padding: '0 24px 24px' }}>
                         <div className={`erp-alert erp-alert-${statusMsg.type}`}>
+                            {statusMsg.type === "success" ? <Zap size={16} /> : <AlertCircle size={16} />}
                             {statusMsg.text}
                         </div>
                     </div>
@@ -142,15 +152,26 @@ export default function AtRiskStudents() {
                 <div className="card-header">
                     <span className="card-title">Risk Assessment Overview</span>
                     <div style={{ display: 'flex', gap: 10 }}>
-                        <button className="erp-btn erp-btn-ghost" onClick={fetchRiskData}>
-                            🔄 Refresh Data
+                        <button className="erp-btn erp-btn-ghost" onClick={fetchRiskData} disabled={loading}>
+                            <RotateCw size={16} className={loading ? 'animate-spin' : ''} style={{ marginRight: 8 }} />
+                            Refresh Data
                         </button>
                         <button
                             className="erp-btn erp-btn-primary"
                             onClick={triggerAutomation}
                             disabled={isTriggering || students.length === 0}
                         >
-                            {isTriggering ? "🟡 Triggering..." : "🚀 Run Risk Workflow"}
+                            {isTriggering ? (
+                                <>
+                                    <RotateCw size={16} className="animate-spin" style={{ marginRight: 8 }} />
+                                    Triggering...
+                                </>
+                            ) : (
+                                <>
+                                    <Send size={16} style={{ marginRight: 8 }} />
+                                    Run Risk Workflow
+                                </>
+                            )}
                         </button>
                     </div>
                 </div>
@@ -168,9 +189,16 @@ export default function AtRiskStudents() {
                         </thead>
                         <tbody>
                             {loading ? (
-                                <tr><td colSpan={5} style={{ textAlign: 'center', padding: 40 }}>Loading data...</td></tr>
+                                <tr><td colSpan={5} style={{ textAlign: 'center', padding: 40 }}>
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 10, color: 'var(--text-secondary)' }}>
+                                        <RotateCw size={20} className="animate-spin" />
+                                        <span>Analyzing student data...</span>
+                                    </div>
+                                </td></tr>
                             ) : students.length === 0 ? (
-                                <tr><td colSpan={5} style={{ textAlign: 'center', padding: 40 }}>No student data found.</td></tr>
+                                <tr><td colSpan={5} style={{ textAlign: 'center', padding: 40 }}>
+                                    <div style={{ color: 'var(--text-muted)' }}>No student data found for assessment.</div>
+                                </td></tr>
                             ) : (
                                 students.map(student => (
                                     <tr key={student.id}>
@@ -179,11 +207,14 @@ export default function AtRiskStudents() {
                                             <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)' }}>{student.email}</div>
                                         </td>
                                         <td>
-                                            <span style={{ color: student.attendance < 75 ? 'var(--danger)' : 'inherit' }}>
+                                            <span style={{
+                                                fontWeight: 600,
+                                                color: student.attendance < 75 ? 'var(--danger)' : student.attendance < 85 ? 'var(--amber)' : 'var(--success)'
+                                            }}>
                                                 {student.attendance}%
                                             </span>
                                         </td>
-                                        <td>{student.averageMarks}</td>
+                                        <td><strong>{student.averageMarks}</strong></td>
                                         <td>
                                             <span className={`erp-badge ${student.riskLevel === 'High' ? 'badge-red' :
                                                 student.riskLevel === 'Medium' ? 'badge-amber' : 'badge-green'

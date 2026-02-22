@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
+import {
+    ClipboardCheck,
+    CheckCircle2,
+    AlertCircle,
+    MousePointer2,
+    Calendar
+} from "lucide-react";
 
 interface Enrollment {
     id: string;
@@ -129,7 +136,7 @@ export default function FacultyAttendance() {
             }));
 
             await API.post("/attendance/bulk", payload);
-            setMsg({ type: "success", text: "✅ Attendance marked successfully for all students." });
+            setMsg({ type: "success", text: "Attendance marked successfully for all students." });
         } catch (err) {
             setMsg({ type: "error", text: "Failed to save attendance. Please try again." });
         } finally {
@@ -142,7 +149,7 @@ export default function FacultyAttendance() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📝</span> Mark Attendance
+                        <span className="card-title-icon"><ClipboardCheck /></span> Mark Attendance
                     </span>
                 </div>
 
@@ -162,11 +169,15 @@ export default function FacultyAttendance() {
                         </div>
                         <div className="erp-field">
                             <label>Date</label>
-                            <input
-                                type="date"
-                                value={attendanceDate}
-                                onChange={e => setAttendanceDate(e.target.value)}
-                            />
+                            <div style={{ position: 'relative' }}>
+                                <Calendar size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                <input
+                                    type="date"
+                                    value={attendanceDate}
+                                    onChange={e => setAttendanceDate(e.target.value)}
+                                    style={{ paddingLeft: 40 }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -247,6 +258,7 @@ export default function FacultyAttendance() {
                     <div className="card-footer" style={{ padding: 20, display: 'flex', flexDirection: 'column', gap: 15 }}>
                         {msg && (
                             <div className={`erp-alert erp-alert-${msg.type}`}>
+                                {msg.type === "success" ? <CheckCircle2 /> : <AlertCircle />}
                                 {msg.text}
                             </div>
                         )}
@@ -264,10 +276,11 @@ export default function FacultyAttendance() {
 
             {!selectedCourseId && (
                 <div className="erp-empty" style={{ marginTop: 20 }}>
-                    <div className="erp-empty-icon">☝️</div>
+                    <div className="erp-empty-icon"><MousePointer2 /></div>
                     <div className="erp-empty-text">Select a course to mark attendance</div>
                 </div>
             )}
         </div>
     );
 }
+

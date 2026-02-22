@@ -3,11 +3,19 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import API from "../api/api";
 import "./Login.css";
+import {
+  ShieldCheck,
+  GraduationCap,
+  BookOpen,
+  Zap,
+  AlertCircle,
+  ArrowRight
+} from "lucide-react";
 
-const ROLE_META: Record<string, { label: string; icon: string; color: string }> = {
-  admin: { label: "Admin", icon: "🛡️", color: "#6366f1" },
-  faculty: { label: "Faculty", icon: "🎓", color: "#0ea5e9" },
-  student: { label: "Student", icon: "📚", color: "#10b981" },
+const ROLE_META: Record<string, { label: string; Icon: any; color: string }> = {
+  admin: { label: "Admin", Icon: ShieldCheck, color: "#6366f1" },
+  faculty: { label: "Faculty", Icon: GraduationCap, color: "#0ea5e9" },
+  student: { label: "Student", Icon: BookOpen, color: "#10b981" },
 };
 
 export default function Login() {
@@ -67,7 +75,7 @@ export default function Login() {
       <div className="login-card">
         {/* Logo */}
         <div className="login-logo">
-          <span className="login-logo-icon">⚡</span>
+          <span className="login-logo-icon"><Zap fill="currentColor" /></span>
           <span className="login-logo-text">ERPify</span>
         </div>
 
@@ -108,7 +116,7 @@ export default function Login() {
           {/* Error */}
           {error && (
             <div className="login-error" role="alert">
-              <span>⚠️</span> {error}
+              <AlertCircle size={16} /> {error}
             </div>
           )}
 
@@ -118,7 +126,7 @@ export default function Login() {
               className="login-role-badge"
               style={{ borderColor: roleMeta.color, color: roleMeta.color }}
             >
-              <span>{roleMeta.icon}</span>
+              <span style={{ display: 'flex', alignItems: 'center' }}><roleMeta.Icon size={18} /></span>
               <span>
                 Identified as <strong>{roleMeta.label}</strong> — signing you
                 in…
@@ -133,7 +141,13 @@ export default function Login() {
             onClick={handleLogin}
             disabled={loading}
           >
-            {loading ? <span className="login-spinner" /> : "Sign In →"}
+            {loading ? (
+              <span className="login-spinner" />
+            ) : (
+              <>
+                Sign In <ArrowRight size={18} style={{ marginLeft: 8 }} />
+              </>
+            )}
           </button>
         </div>
       </div>

@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+    ClipboardList,
+    Plus,
+    Trash2,
+    CheckCircle2,
+    AlertCircle,
+    Inbox,
+    RotateCw
+} from "lucide-react";
 
 // ── Interfaces ──────────────────────────────────────────────────────────────
 interface Institution { id: string; name: string; }
@@ -121,7 +130,7 @@ export default function Enrollments() {
                 faculty_id: facultyId || null,
                 semester_id: semesterId, status,
             });
-            setMsg({ type: "success", text: `✅ "${getUserName(studentId)}" enrolled in "${getCourseName(courseId)}".` });
+            setMsg({ type: "success", text: `"${getUserName(studentId)}" enrolled in "${getCourseName(courseId)}".` });
             setCourseId(""); setStudentId(""); setFacultyId(""); setSemesterId(""); setStatus("enrolled");
             setTimeout(() => setMsg(null), 4000);
             fetchEnrollments();
@@ -155,7 +164,7 @@ export default function Enrollments() {
         if (!deleteTarget) return;
         try {
             await API.delete(`/enrollment/${deleteTarget.id}`);
-            setMsg({ type: "success", text: "Enrollment removed." });
+            setMsg({ type: "success", text: "Enrollment removed successfully." });
             fetchEnrollments();
             setTimeout(() => setMsg(null), 3000);
         } catch {
@@ -167,7 +176,7 @@ export default function Enrollments() {
 
     // ── Render ──────────────────────────────────────────────────────────────────
     return (
-        <>
+        <div className="erp-container">
             {deleteTarget && (
                 <ConfirmModal
                     title="Remove Enrollment?"
@@ -181,13 +190,16 @@ export default function Enrollments() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📋</span> Enroll Student in Course
+                        <span className="card-title-icon"><Plus /></span> Enroll Student in Course
                     </span>
                 </div>
 
                 {msg && (
-                    <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 16 }}>
-                        {msg.text}
+                    <div style={{ padding: '20px 24px 0' }}>
+                        <div className={`erp-alert erp-alert-${msg.type}`}>
+                            {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+                            {msg.text}
+                        </div>
                     </div>
                 )}
 
@@ -272,32 +284,25 @@ export default function Enrollments() {
                     <div>
                         <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
                             {loading ? (
-                                <>
-                                    <span style={{
-                                        display: "inline-block", width: 13, height: 13,
-                                        border: "2px solid rgba(255,255,255,0.35)", borderTopColor: "#fff",
-                                        borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 7,
-                                    }} />
-                                    Enrolling…
-                                </>
-                            ) : "+ Create Enrollment"}
+                                <><RotateCw size={14} className="animate-spin" style={{ marginRight: 8 }} />Enrolling…</>
+                            ) : <><Plus size={18} style={{ marginRight: 8 }} /> Create Enrollment</>}
                         </button>
                     </div>
                 </div>
             </div>
 
             {/* ── Enrollment List ──────────────────────────────────────── */}
-            <div className="erp-card">
+            <div className="erp-card" style={{ marginTop: 20 }}>
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📋</span> All Enrollments
+                        <span className="card-title-icon"><ClipboardList /></span> All Enrollments
                     </span>
                     <span className="erp-badge badge-blue">{enrollments.length} total</span>
                 </div>
 
                 {enrollments.length === 0 ? (
                     <div className="erp-empty">
-                        <div className="erp-empty-icon">📭</div>
+                        <div className="erp-empty-icon"><Inbox /></div>
                         <div className="erp-empty-text">No enrollments yet — use the form above to add one.</div>
                     </div>
                 ) : (
@@ -368,13 +373,7 @@ export default function Enrollments() {
                                         <td>
                                             <div style={{ position: "relative", display: "inline-block" }}>
                                                 {updatingId === enr.id && (
-                                                    <span style={{
-                                                        position: "absolute", right: 4, top: "50%", transform: "translateY(-50%)",
-                                                        display: "inline-block", width: 10, height: 10,
-                                                        border: "2px solid var(--border)", borderTopColor: "var(--brand)",
-                                                        borderRadius: "50%", animation: "spin 0.7s linear infinite",
-                                                        zIndex: 1, pointerEvents: "none",
-                                                    }} />
+                                                    <RotateCw size={12} className="animate-spin" style={{ position: 'absolute', right: 30, top: '50%', transform: 'translateY(-50%)', zIndex: 1 }} />
                                                 )}
                                                 <select
                                                     value={enr.status}
@@ -404,8 +403,8 @@ export default function Enrollments() {
                                         </td>
 
                                         <td style={{ textAlign: "center" }}>
-                                            <button className="erp-btn erp-btn-danger" onClick={() => setDeleteTarget(enr)}>
-                                                🗑️ Delete
+                                            <button className="erp-btn erp-btn-danger erp-btn-sm" onClick={() => setDeleteTarget(enr)} style={{ padding: '6px 12px' }}>
+                                                <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                                             </button>
                                         </td>
                                     </tr>
@@ -415,6 +414,6 @@ export default function Enrollments() {
                     </div>
                 )}
             </div>
-        </>
+        </div>
     );
 }

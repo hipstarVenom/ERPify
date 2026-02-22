@@ -1,4 +1,13 @@
 import { useEffect, useState } from "react";
+import {
+    History as HistoryIcon,
+    RotateCw,
+    Search,
+    Inbox,
+    Calendar,
+    User,
+    BookOpen
+} from "lucide-react";
 import API from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
 
@@ -14,6 +23,7 @@ interface Enrollment {
     id: string;
     student_id: string;
     course_id: string;
+    institution_id: string;
 }
 
 interface Course {
@@ -106,10 +116,11 @@ export default function AttendanceHistory() {
             <div className="erp-card">
                 <div className="card-header">
                     <span className="card-title">
-                        <span className="card-title-icon">📜</span> Attendance History
+                        <span className="card-title-icon"><HistoryIcon /></span> Attendance History
                     </span>
                     <button className="erp-btn erp-btn-secondary" onClick={fetchData} disabled={loading}>
-                        {loading ? "Refreshing..." : "🔄 Refresh"}
+                        <RotateCw size={16} className={loading ? 'animate-spin' : ''} style={{ marginRight: 8 }} />
+                        {loading ? "Refreshing..." : "Refresh"}
                     </button>
                 </div>
 
@@ -129,19 +140,23 @@ export default function AttendanceHistory() {
                         </div>
                         <div className="erp-field">
                             <label>Search Student</label>
-                            <input
-                                type="text"
-                                placeholder="Search by name..."
-                                value={searchTerm}
-                                onChange={e => setSearchTerm(e.target.value)}
-                            />
+                            <div style={{ position: 'relative' }}>
+                                <Search size={16} style={{ position: 'absolute', left: 12, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-secondary)' }} />
+                                <input
+                                    type="text"
+                                    placeholder="Search by name..."
+                                    value={searchTerm}
+                                    onChange={e => setSearchTerm(e.target.value)}
+                                    style={{ paddingLeft: 40 }}
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 {filteredRecords.length === 0 ? (
                     <div className="erp-empty" style={{ padding: '60px 0' }}>
-                        <div className="erp-empty-icon">📂</div>
+                        <div className="erp-empty-icon"><Inbox /></div>
                         <div className="erp-empty-text">
                             {loading ? "Loading history..." : "No attendance records found."}
                         </div>
@@ -162,16 +177,24 @@ export default function AttendanceHistory() {
                                 {filteredRecords.map((rec) => (
                                     <tr key={rec.id}>
                                         <td>
-                                            <span style={{ fontWeight: 600 }}>
-                                                {new Date(rec.attendance_date).toLocaleDateString(undefined, {
-                                                    weekday: 'short',
-                                                    year: 'numeric',
-                                                    month: 'short',
-                                                    day: 'numeric'
-                                                })}
-                                            </span>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <Calendar size={14} color="var(--brand)" />
+                                                <span style={{ fontWeight: 600 }}>
+                                                    {new Date(rec.attendance_date).toLocaleDateString(undefined, {
+                                                        weekday: 'short',
+                                                        year: 'numeric',
+                                                        month: 'short',
+                                                        day: 'numeric'
+                                                    })}
+                                                </span>
+                                            </div>
                                         </td>
-                                        <td><strong>{getUserName(rec.enrollment_id)}</strong></td>
+                                        <td>
+                                            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                                                <User size={14} color="var(--text-secondary)" />
+                                                <strong>{getUserName(rec.enrollment_id)}</strong>
+                                            </div>
+                                        </td>
                                         <td style={{ color: "var(--text-secondary)" }}>{getCourseInfo(rec.enrollment_id)}</td>
                                         <td style={{ textAlign: "center" }}>
                                             <span className={`erp-badge ${rec.status ? 'badge-green' : 'badge-red'}`} style={{

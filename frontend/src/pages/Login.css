@@ -96,8 +96,16 @@
 }
 
 .login-logo-icon {
-  font-size: 1.6rem;
-  filter: drop-shadow(0 0 6px #2563eb);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #2563eb;
+  filter: drop-shadow(0 0 8px rgba(37, 99, 235, 0.4));
+}
+
+.login-logo-icon svg {
+  width: 28px;
+  height: 28px;
 }
 
 .login-logo-text {
@@ -140,7 +148,7 @@
 }
 
 .login-field label {
-  font-size: 0.75rem;22
+  font-size: 0.75rem;
   font-weight: 700;
   color: var(--text-secondary);
   text-transform: uppercase;
@@ -148,7 +156,7 @@
 }
 
 .login-field input {
-  background: var(--bg-input);22
+  background: var(--bg-input);
   border: 1px solid var(--border-input);
   border-radius: var(--radius-sm);
   padding: 10px 13px;
@@ -178,7 +186,7 @@
 .login-error {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   background: var(--danger-bg);
   border: 1px solid var(--danger);
   color: var(--danger);

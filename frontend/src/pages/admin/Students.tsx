@@ -1,6 +1,15 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+  Users,
+  UserPlus,
+  Trash2,
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle,
+  RotateCw
+} from "lucide-react";
 
 interface Institution { id: string; name: string; }
 interface Department { id: string; name: string; institution_id: string; }
@@ -111,12 +120,17 @@ export default function Students() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">👥</span> Enroll Student</span>
+          <span className="card-title">
+            <span className="card-title-icon"><UserPlus /></span> Enroll Student
+          </span>
         </div>
 
         {msg && (
-          <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 16 }}>
-            {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+          <div style={{ padding: '20px 24px 0' }}>
+            <div className={`erp-alert erp-alert-${msg.type}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {msg.text}
+            </div>
           </div>
         )}
 
@@ -170,8 +184,8 @@ export default function Students() {
           <div>
             <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
               {loading ? (
-                <><span style={{ display: "inline-block", width: 14, height: 14, border: "2px solid rgba(255,255,255,0.4)", borderTopColor: "#fff", borderRadius: "50%", animation: "spin 0.7s linear infinite", marginRight: 6 }} />Enrolling…</>
-              ) : "+ Enroll Student"}
+                <><RotateCw size={14} className="animate-spin" style={{ marginRight: 8 }} />Enrolling…</>
+              ) : <><UserPlus size={18} style={{ marginRight: 8 }} /> Enroll Student</>}
             </button>
           </div>
         </div>
@@ -179,12 +193,14 @@ export default function Students() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📋</span> All Students</span>
+          <span className="card-title">
+            <span className="card-title-icon"><ClipboardList /></span> All Students
+          </span>
           <span className="erp-badge badge-green">{studentList.length} enrolled</span>
         </div>
         {studentList.length === 0 ? (
           <div className="erp-empty">
-            <div className="erp-empty-icon">👥</div>
+            <div className="erp-empty-icon"><Users /></div>
             <div className="erp-empty-text">No students enrolled yet</div>
           </div>
         ) : (
@@ -208,8 +224,8 @@ export default function Students() {
                     <td>{getDeptName(s.department_id)}</td>
                     <td><span className="erp-badge badge-blue">{getInstByDept(s.department_id)}</span></td>
                     <td style={{ textAlign: "center" }}>
-                      <button className="erp-btn erp-btn-danger" onClick={() => setDeleteTarget(s)}>
-                        🗑️ Delete
+                      <button className="erp-btn erp-btn-danger erp-btn-sm" onClick={() => setDeleteTarget(s)} style={{ padding: '6px 12px' }}>
+                        <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                       </button>
                     </td>
                   </tr>

@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import API from "../../api/api";
 import ConfirmModal from "../../components/ConfirmModal";
+import {
+  BookOpen,
+  Plus,
+  Trash2,
+  ClipboardList,
+  CheckCircle2,
+  AlertCircle
+} from "lucide-react";
 
 interface Institution { id: string; name: string; }
 interface Department { id: string; name: string; institution_id: string; }
@@ -101,12 +109,17 @@ export default function Courses() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📚</span> Add Course</span>
+          <span className="card-title">
+            <span className="card-title-icon"><BookOpen /></span> Add Course
+          </span>
         </div>
 
         {msg && (
-          <div className={`erp-alert erp-alert-${msg.type}`} style={{ marginBottom: 16 }}>
-            {msg.type === "success" ? "✅" : "⚠️"} {msg.text}
+          <div style={{ padding: '20px 24px 0' }}>
+            <div className={`erp-alert erp-alert-${msg.type}`}>
+              {msg.type === "success" ? <CheckCircle2 size={16} /> : <AlertCircle size={16} />}
+              {msg.text}
+            </div>
           </div>
         )}
 
@@ -148,7 +161,7 @@ export default function Courses() {
           </div>
           <div>
             <button className="erp-btn erp-btn-primary" onClick={handleCreate} disabled={loading}>
-              {loading ? "Creating…" : "+ Create Course"}
+              {loading ? "Creating…" : <><Plus size={18} style={{ marginRight: 8 }} /> Create Course</>}
             </button>
           </div>
         </div>
@@ -156,12 +169,14 @@ export default function Courses() {
 
       <div className="erp-card">
         <div className="card-header">
-          <span className="card-title"><span className="card-title-icon">📋</span> All Courses</span>
+          <span className="card-title">
+            <span className="card-title-icon"><ClipboardList /></span> All Courses
+          </span>
           <span className="erp-badge badge-blue">{courseList.length} total</span>
         </div>
         {courseList.length === 0 ? (
           <div className="erp-empty">
-            <div className="erp-empty-icon">📚</div>
+            <div className="erp-empty-icon"><BookOpen /></div>
             <div className="erp-empty-text">No courses added yet</div>
           </div>
         ) : (
@@ -188,8 +203,8 @@ export default function Courses() {
                     <td>{getDeptName(c.department_id)}</td>
                     <td><span className="erp-badge badge-blue">{getInstName(c.institution_id)}</span></td>
                     <td style={{ textAlign: "center" }}>
-                      <button className="erp-btn erp-btn-danger" onClick={() => setDeleteTarget(c)}>
-                        🗑️ Delete
+                      <button className="erp-btn erp-btn-danger erp-btn-sm" onClick={() => setDeleteTarget(c)} style={{ padding: '6px 12px' }}>
+                        <Trash2 size={14} style={{ marginRight: 6 }} /> Delete
                       </button>
                     </td>
                   </tr>
