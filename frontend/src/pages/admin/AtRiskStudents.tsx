@@ -2,11 +2,9 @@ import { useEffect, useState } from "react";
 import API from "../../api/api";
 import axios from "axios";
 import {
-    AlertTriangle,
     Bot,
     RotateCw,
     Zap,
-    CheckCircle2,
     AlertCircle,
     Send
 } from "lucide-react";
