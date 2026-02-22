@@ -6,7 +6,6 @@ import {
     Inbox,
     Calendar,
     User,
-    BookOpen
 } from "lucide-react";
 import API from "../../api/api";
 import { useAuth } from "../../context/AuthContext";
