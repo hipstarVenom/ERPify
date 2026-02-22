@@ -21,12 +21,24 @@ interface Course {
     code: string;
 }
 
+interface AttendanceNotification {
+    type: "critical" | "warning";
+    course_name: string;
+    course_code: string;
+    attendance_percentage: number;
+    attended: number;
+    total: number;
+    message: string;
+}
+
 export default function StudentDashboard() {
     const { user } = useAuth();
     const [attendance, setAttendance] = useState<AttendanceSummary[]>([]);
     const [grades, setGrades] = useState<Grade[]>([]);
     const [courses, setCourses] = useState<Course[]>([]);
     const [loading, setLoading] = useState(true);
+    const [notifications, setNotifications] = useState<AttendanceNotification[]>([]);
+    const [dismissedNotifs, setDismissedNotifs] = useState<Set<string>>(new Set());
 
     useEffect(() => {
         const fetchDashboardData = async () => {
@@ -36,11 +48,15 @@ export default function StudentDashboard() {
                 // Sync attendance summary first
                 await API.get(`/attendance-summary/student/${user.id}`);
 
-                // Fetch dashboard data
-                const res = await API.get(`/students/${user.id}/dashboard`);
+                // Fetch dashboard data and notifications in parallel
+                const [res, notifRes] = await Promise.all([
+                    API.get(`/students/${user.id}/dashboard`),
+                    API.get(`/students/${user.id}/notifications`)
+                ]);
                 setCourses(res.data.courses);
                 setAttendance(res.data.attendance);
                 setGrades(res.data.grades);
+                setNotifications(notifRes.data);
             } catch (error) {
                 console.error("Error fetching dashboard data:", error);
             } finally {
@@ -76,6 +92,83 @@ export default function StudentDashboard() {
 
     return (
         <div className="erp-dashboard-content">
+
+            {/* 🔔 Attendance Warning Notifications */}
+            {notifications.filter(n => !dismissedNotifs.has(n.course_code)).length > 0 && (
+                <div style={{ marginBottom: 24 }}>
+                    {notifications
+                        .filter(n => !dismissedNotifs.has(n.course_code))
+                        .map((notif) => (
+                            <div
+                                key={notif.course_code}
+                                style={{
+                                    display: 'flex',
+                                    alignItems: 'flex-start',
+                                    justifyContent: 'space-between',
+                                    padding: '14px 18px',
+                                    marginBottom: 10,
+                                    borderRadius: 10,
+                                    border: `1.5px solid ${notif.type === 'critical' ? '#fca5a5' : '#fcd34d'}`,
+                                    background: notif.type === 'critical'
+                                        ? 'linear-gradient(135deg, #fff5f5, #fff1f1)'
+                                        : 'linear-gradient(135deg, #fffbeb, #fef9e7)',
+                                    boxShadow: '0 2px 8px rgba(0,0,0,0.06)',
+                                    gap: 12
+                                }}
+                            >
+                                <div style={{ display: 'flex', gap: 12, alignItems: 'flex-start', flex: 1 }}>
+                                    <div style={{ fontSize: '1.4rem', lineHeight: 1 }}>
+                                        {notif.type === 'critical' ? '🚨' : '⚠️'}
+                                    </div>
+                                    <div>
+                                        <div style={{
+                                            fontWeight: 700,
+                                            fontSize: '0.95rem',
+                                            color: notif.type === 'critical' ? '#dc2626' : '#b45309',
+                                            marginBottom: 3
+                                        }}>
+                                            {notif.type === 'critical' ? 'Critical Attendance Alert' : 'Attendance Warning'}
+                                            {' '}
+                                            <span style={{
+                                                background: notif.type === 'critical' ? '#fee2e2' : '#fef3c7',
+                                                padding: '1px 8px',
+                                                borderRadius: 20,
+                                                fontSize: '0.8rem',
+                                                fontWeight: 600,
+                                                marginLeft: 4
+                                            }}>
+                                                {notif.course_code}
+                                            </span>
+                                        </div>
+                                        <div style={{ color: '#374151', fontSize: '0.875rem', lineHeight: 1.5 }}>
+                                            {notif.message}
+                                        </div>
+                                        <div style={{ color: '#6b7280', fontSize: '0.8rem', marginTop: 4 }}>
+                                            📊 {notif.attended}/{notif.total} classes attended ({notif.attendance_percentage}%)
+                                        </div>
+                                    </div>
+                                </div>
+                                <button
+                                    onClick={() => setDismissedNotifs(prev => new Set([...prev, notif.course_code]))}
+                                    style={{
+                                        background: 'none',
+                                        border: 'none',
+                                        cursor: 'pointer',
+                                        color: '#9ca3af',
+                                        fontSize: '1.1rem',
+                                        padding: '0 4px',
+                                        lineHeight: 1,
+                                        flexShrink: 0
+                                    }}
+                                    title="Dismiss"
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                </div>
+            )}
+
             {/* 🔝 Hero Stats Section */}
             <div className="erp-stats-grid">
                 <div className="erp-stat-card welcome-card">

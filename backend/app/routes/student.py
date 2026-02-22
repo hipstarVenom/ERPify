@@ -85,6 +85,62 @@ def get_student_dashboard(user_id: UUID, db: Session = Depends(get_db)):
         ]
     }
 
+
+# 🔔 GET - Attendance Warning Notifications for Student
+@router.get("/{user_id}/notifications")
+def get_student_notifications(user_id: UUID, db: Session = Depends(get_db)):
+    """
+    Returns attendance warning notifications for a student.
+    - CRITICAL: attendance < 75%
+    - WARNING:  attendance >= 75% but < 85%
+    """
+    # Get active enrollments
+    active_course_ids = [
+        enr.course_id for enr in db.query(Enrollment).filter(
+            Enrollment.student_id == user_id,
+            Enrollment.status == "enrolled"
+        ).all()
+    ]
+
+    if not active_course_ids:
+        return []
+
+    # Get attendance summaries for those courses
+    summaries = db.query(AttendanceSummary, Course).join(
+        Course, AttendanceSummary.course_id == Course.id
+    ).filter(
+        AttendanceSummary.student_id == user_id,
+        AttendanceSummary.course_id.in_(active_course_ids)
+    ).all()
+
+    notifications = []
+    for a, c in summaries:
+        pct = float(a.attendance_percentage)
+        if pct < 75:
+            notifications.append({
+                "type": "critical",
+                "course_name": c.course_name,
+                "course_code": c.course_code,
+                "attendance_percentage": round(pct, 1),
+                "attended": a.attended_classes,
+                "total": a.total_classes,
+                "message": f"Your attendance in {c.course_name} is {round(pct, 1)}% — below the required 75%. You are at risk of being detained."
+            })
+        elif pct < 85:
+            notifications.append({
+                "type": "warning",
+                "course_name": c.course_name,
+                "course_code": c.course_code,
+                "attendance_percentage": round(pct, 1),
+                "attended": a.attended_classes,
+                "total": a.total_classes,
+                "message": f"Your attendance in {c.course_name} is {round(pct, 1)}% — approaching the minimum threshold. Attend more classes."
+            })
+
+    # Sort: critical first, then warning
+    notifications.sort(key=lambda x: 0 if x["type"] == "critical" else 1)
+    return notifications
+
 # 🔹 POST - Create Student
 @router.post("/", response_model=StudentResponse)
 def create_student(student: StudentCreate, db: Session = Depends(get_db)):
